@@ -1,20 +1,23 @@
 package me.mrpingu.maze.generator
 
+import me.mrpingu.maze.generator.extension.Coordinate
+import me.mrpingu.maze.generator.extension.IntMatrix
+
 interface MazeGenerator {
 	
-	fun cellCount(maze: Array<IntArray>): Int
+	fun cellCount(maze: IntMatrix): Int
 	
-	fun generate(width: Int, height: Int): Array<IntArray>
+	fun generate(width: Int, height: Int): IntMatrix
 	
-	fun neighbours(maze: Array<IntArray>, cell: Pair<Int, Int>): Array<Pair<Int, Int>?>
+	fun neighbours(maze: IntMatrix, cell: Coordinate): Array<Coordinate?>
 	
-	fun openCell(maze: Array<IntArray>, cell: Pair<Int, Int>)
+	fun openCell(maze: IntMatrix, cell: Coordinate)
 	
-	fun openWall(maze: Array<IntArray>, wall: Pair<Int, Int>)
+	fun openWall(maze: IntMatrix, wall: Coordinate)
 	
 	fun validateDimensions(width: Int, height: Int): Boolean
 	
-	fun validateDimensions(maze: Array<IntArray>): Boolean
+	fun validateDimensions(maze: IntMatrix): Boolean
 	
-	fun wall(cell: Pair<Int, Int>, otherCell: Pair<Int, Int>): Pair<Int, Int>
+	fun wall(cell: Coordinate, otherCell: Coordinate): Coordinate
 }

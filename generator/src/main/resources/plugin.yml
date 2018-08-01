@@ -1,5 +1,5 @@
 name: @pl.name@
-main: @pl.group@.Main
+main: @pl.group@.RectBacktrackerGenerator
 version: @pl.version@
 authors: [@pl.authors@]
 load: STARTUP

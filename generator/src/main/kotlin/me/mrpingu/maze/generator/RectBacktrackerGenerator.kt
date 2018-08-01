@@ -1,54 +1,46 @@
 package me.mrpingu.maze.generator
 
-import me.mrpingu.maze.generator.extension.stackOf
+import me.mrpingu.maze.generator.extension.*
 import java.util.*
 
-object Main {
+object RectBacktrackerGenerator: MazeGenerator {
 	
 	private val random = Random()
 	
-	fun generate(width: Int, height: Int): Array<IntArray> {
+	override fun generate(width: Int, height: Int): IntMatrix {
 		if (!validateDimensions(width, height)) throw IllegalArgumentException()
 		
-		val maze = Array(width) { IntArray(height) { 0 } }
-		
-		val cellCount = cellCount(maze)
-		var visited = 0
+		val maze = Array(height) { IntArray(width) }
 		
 		var cell = 1 to 1
 		openCell(maze, cell)
 		
-		val stack = stackOf<Pair<Int, Int>>()
+		val stack = stackOf<Coordinate>()
 		
-		println(cellCount)
-		
-		while (visited < cellCount) {
+		do {
 			val neighbour = randomClosedNeighbour(maze, cell)
 			
-			if (neighbour != null) {
+			cell = if (neighbour != null) {
 				stack.push(cell)
 				
 				val wall = wall(cell, neighbour)
 				openWall(maze, wall)
 				openCell(maze, neighbour)
 				
-				cell = neighbour
-				
-				visited++
-				
-				println(visited)
-			} else if (stack.isNotEmpty()) cell = stack.pop()
-		}
+				neighbour
+			} else stack.pop()
+		} while (stack.isNotEmpty())
 		
 		return maze
 	}
 	
-	fun validateDimensions(width: Int, height: Int) =
-			width >= 3 && height >= 3 || width - 1 % 2 == 0 || height - 1 % 2 == 0
+	override fun validateDimensions(width: Int, height: Int) =
+			width >= 3 && height >= 3 && (width - 1) % 2 == 0 && (height - 1) % 2 == 0
 	
-	fun validateDimensions(maze: Array<IntArray>) = maze.isNotEmpty() && validateDimensions(maze.size, maze[0].size)
+	override fun validateDimensions(maze: IntMatrix) =
+			maze.isNotEmpty() && validateDimensions(maze.size, maze[0].size)
 	
-	fun cellCount(maze: Array<IntArray>): Int {
+	override fun cellCount(maze: IntMatrix): Int {
 		if (!validateDimensions(maze)) throw IllegalArgumentException()
 		
 		val width = maze.size
@@ -57,7 +49,7 @@ object Main {
 		return ((width - 1) / 2) * ((height - 1) / 2)
 	}
 	
-	fun neighbours(maze: Array<IntArray>, cell: Pair<Int, Int>): Array<Pair<Int, Int>?> {
+	override fun neighbours(maze: IntMatrix, cell: Coordinate): Array<Coordinate?> {
 		if (!validateDimensions(maze)) throw IllegalArgumentException()
 		
 		val width = maze.size
@@ -73,13 +65,13 @@ object Main {
 				if (y != height - 2) x to (y + 2) else null)
 	}
 	
-	fun randomClosedNeighbour(maze: Array<IntArray>, cell: Pair<Int, Int>) =
+	private fun randomClosedNeighbour(maze: IntMatrix, cell: Coordinate) =
 			neighbours(maze, cell)
 					.filterNotNull()
 					.filter { maze[it.first][it.second] == 0 }
 					.let { if (it.size <= 1) it.firstOrNull() else it[random.nextInt(it.size)] }
 	
-	fun wall(cell: Pair<Int, Int>, otherCell: Pair<Int, Int>): Pair<Int, Int> {
+	override fun wall(cell: Coordinate, otherCell: Coordinate): Coordinate {
 		if (cell == otherCell) throw IllegalArgumentException()
 		
 		val x = cell.first
@@ -95,20 +87,11 @@ object Main {
 		}
 	}
 	
-	fun openCell(maze: Array<IntArray>, cell: Pair<Int, Int>) {
+	override fun openCell(maze: IntMatrix, cell: Coordinate) {
 		maze[cell.first][cell.second] = 1
 	}
 	
-	fun openWall(maze: Array<IntArray>, wall: Pair<Int, Int>) {
+	override fun openWall(maze: IntMatrix, wall: Coordinate) {
 		maze[wall.first][wall.second] = 1
-	}
-	
-	fun printMaze(maze: Array<IntArray>) {
-		for (i in 0 until maze.size) {
-			for (j in 0 until maze[i].size)
-				print(maze[i][j].toString() + " ")
-			
-			println(" ")
-		}
 	}
 }
