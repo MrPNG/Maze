@@ -5,6 +5,8 @@ import me.mrpingu.maze.generator.extension.IntMatrix
 
 interface MazeGenerator {
 	
+	fun baseMatrix(width: Int, height: Int): IntMatrix
+	
 	fun cellCount(maze: IntMatrix): Int
 	
 	fun generate(width: Int, height: Int): IntMatrix

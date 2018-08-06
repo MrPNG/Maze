@@ -1,45 +1,108 @@
 package me.mrpingu.maze.generator
 
-import me.mrpingu.maze.generator.extension.IntMatrix
-import java.awt.image.BufferedImage
-import javax.swing.*
+import io.reactivex.Observable
+import me.mrpingu.maze.generator.extension.*
+import java.awt.Color.BLACK
+import java.awt.Color.WHITE
+import java.awt.Graphics
+import javax.swing.JFrame
+import javax.swing.JFrame.EXIT_ON_CLOSE
+import javax.swing.JPanel
 
-val width = 99
-val height = 15
+const val mazeWidth = 49
+const val mazeHeight = 49
 
 fun main(args: Array<String>) {
-	render(RectBacktrackerGenerator.generate(width, height))
+	val maze = RectBacktrackerGenerator.generate(mazeWidth, mazeHeight)
+	val mazeObservable = RectBacktrackerGenerator.generateObservable(mazeWidth, mazeHeight)
+	
+	//printMaze(maze)
+	//render(maze)
+	renderObservable(mazeObservable)
 }
 
 fun printMaze(maze: IntMatrix) {
-	for (i in 0 until maze.size) {
-		for (j in 0 until maze[i].size)
-			print(maze[i][j].toString().replace("0", "▓").replace("1", "░"))
+	maze.forEach {
+		it.forEach { value ->
+			print(value.toString().replace("0", "▓").replace("1", "░"))
+		}
 		
 		println()
 	}
 }
 
-const val cellSize = 5
+const val cellSize = 16
 
 fun render(maze: IntMatrix) {
-	val imageWidth = width * cellSize
-	val imageHeight = height * cellSize
+	JFrame().run {
+		contentPane = MazePanel(maze)
+		
+		pack()
+		
+		defaultCloseOperation = EXIT_ON_CLOSE
+		isVisible = true
+	}
+}
+
+fun renderObservable(maze: Observable<Coordinate>) {
+	JFrame().run {
+		contentPane = MazePanelObservable(maze)
+		
+		pack()
+		
+		defaultCloseOperation = EXIT_ON_CLOSE
+		isVisible = true
+	}
+}
+
+class MazePanel(val maze: IntMatrix): JPanel() {
 	
-	val bufferedImage = BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_BYTE_BINARY)
+	init {
+		preferredSize = mazeWidth * cellSize by mazeHeight * cellSize
+	}
 	
-	maze.forEachIndexed { y, array ->
-		array.forEachIndexed { x, value ->
-			bufferedImage.setRGB(x * cellSize + 1, y * cellSize + 1, value)
+	override fun paintComponent(graphics: Graphics?) {
+		maze.forEachIndexed { y, array ->
+			array.forEachIndexed { x, value ->
+				graphics?.run {
+					color = if (value == 0) BLACK else WHITE
+					
+					fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+				}
+			}
+		}
+	}
+}
+
+class MazePanelObservable(maze: Observable<Coordinate>): JPanel() {
+	
+	private var currentX: Int = 0
+	private var currentY: Int = 0
+	
+	init {
+		preferredSize = mazeWidth * cellSize by mazeHeight * cellSize
+		
+		maze.subscribe {
+			currentX = it.first
+			currentY = it.second
+			
+			println(it)
+			
+			invalidate()
 		}
 	}
 	
-	JFrame().apply {
-		setSize(imageWidth, imageHeight)
-		
-		add(JLabel(ImageIcon(bufferedImage)))
-		
-		pack()
-		isVisible = true
+	override fun paintComponent(g: Graphics?) {
+		graphics?.run {
+			if (currentX == 0 && currentY == 0) {
+				color = BLACK
+				
+				fillRect(0, 0, width, height)
+			} else {
+				color = WHITE
+				
+				fillRect(currentX * cellSize, currentY * cellSize, cellSize, cellSize)
+			}
+		}
 	}
 }

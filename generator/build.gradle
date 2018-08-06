@@ -26,8 +26,11 @@ task copyJar(type: Copy) {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    compileOnly "org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT"
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.2.0'
+    compile group: 'io.reactivex.rxjava2', name: 'rxkotlin', version: '2.2.0'
 
-    compileOnly "com.github.MrPNG:ProtocolSupport:master-SNAPSHOT"
-    compileOnly "us.myles:viaversion:1.3.0"
+    compileOnly group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
+
+    compileOnly group: 'com.github.MrPNG', name: 'ProtocolSupport', version: 'master-SNAPSHOT'
+    compileOnly group: 'us.myles', name: 'viaversion', version: '1.3.0'
 }
