@@ -5,15 +5,24 @@ import me.mrpingu.maze.generator.extension.Coordinates
 import me.mrpingu.maze.generator.extension.IntMatrix
 import kotlin.random.Random
 
-interface MazeGenerator {
+interface MazeAlgorithm {
 	
 	val random: Random
+	
+	fun generate(width: Int, height: Int): IntMatrix
+	
+	companion object {
+		
+		const val OPEN = 1
+		const val CLOSED = 0
+	}
+}
+
+interface MazeModel {
 	
 	fun createMatrix(width: Int, height: Int): IntMatrix
 	
 	fun cellCount(matrix: IntMatrix): Int
-	
-	fun generate(width: Int, height: Int): IntMatrix
 	
 	fun elementType(coordinates: Coordinates): ElementType
 	
@@ -36,14 +45,4 @@ interface MazeGenerator {
 	fun openWall(matrix: IntMatrix, wall: Coordinates)
 	
 	fun validateDimensions(width: Int, height: Int): Boolean
-	
-	companion object {
-		
-		const val OPEN = 1
-		const val CLOSED = 0
-	}
 }
-
-interface MazeAlgorithm
-
-interface MazeShape

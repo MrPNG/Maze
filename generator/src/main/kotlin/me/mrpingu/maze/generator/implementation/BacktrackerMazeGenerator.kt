@@ -1,16 +1,17 @@
 package me.mrpingu.maze.generator.implementation
 
 import me.mrpingu.maze.generator.MazeAlgorithm
-import me.mrpingu.maze.generator.MazeGenerator
-import me.mrpingu.maze.generator.MazeGenerator.Companion.CLOSED
+import me.mrpingu.maze.generator.MazeAlgorithm.Companion.CLOSED
+import me.mrpingu.maze.generator.MazeModel
 import me.mrpingu.maze.generator.extension.Coordinates
 import me.mrpingu.maze.generator.extension.IntMatrix
 import me.mrpingu.maze.generator.extension.get
 import me.mrpingu.maze.generator.extension.stackOf
+import kotlin.random.Random
 
-interface BacktrackerGenerator: MazeGenerator, MazeAlgorithm {
+abstract class BacktrackerMazeGenerator(override val random: Random, mazeModel: MazeModel): MazeAlgorithm, MazeModel by mazeModel {
 	
-	fun randomClosedNeighbour(matrix: IntMatrix, cell: Coordinates) =
+	private fun randomClosedNeighbour(matrix: IntMatrix, cell: Coordinates) =
 			neighbourCells(matrix, cell)
 				.filterNotNull()
 				.filter { matrix[it] == CLOSED }

@@ -1,7 +1,7 @@
 package me.mrpingu.maze.generator
 
-import me.mrpingu.maze.generator.MazeGenerator.Companion.CLOSED
-import me.mrpingu.maze.generator.MazeGenerator.Companion.OPEN
+import me.mrpingu.maze.generator.MazeAlgorithm.Companion.CLOSED
+import me.mrpingu.maze.generator.MazeAlgorithm.Companion.OPEN
 import me.mrpingu.maze.generator.MazeGraphics.drawOrthogonalMaze
 import me.mrpingu.maze.generator.extension.IntMatrix
 import me.mrpingu.maze.generator.extension.addMouseClickListener

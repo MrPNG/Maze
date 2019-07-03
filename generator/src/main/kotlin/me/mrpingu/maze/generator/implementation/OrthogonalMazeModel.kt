@@ -1,16 +1,15 @@
 package me.mrpingu.maze.generator.implementation
 
 import me.mrpingu.maze.generator.ElementType.*
-import me.mrpingu.maze.generator.MazeGenerator
-import me.mrpingu.maze.generator.MazeGenerator.Companion.CLOSED
-import me.mrpingu.maze.generator.MazeGenerator.Companion.OPEN
-import me.mrpingu.maze.generator.MazeShape
+import me.mrpingu.maze.generator.MazeAlgorithm.Companion.CLOSED
+import me.mrpingu.maze.generator.MazeAlgorithm.Companion.OPEN
+import me.mrpingu.maze.generator.MazeModel
 import me.mrpingu.maze.generator.extension.Coordinates
 import me.mrpingu.maze.generator.extension.IntMatrix
 import me.mrpingu.maze.generator.extension.x
 import me.mrpingu.maze.generator.extension.y
 
-interface OrthogonalGenerator: MazeGenerator, MazeShape {
+object OrthogonalMazeModel: MazeModel {
 	
 	override fun createMatrix(width: Int, height: Int) = IntMatrix(width, height)
 	
