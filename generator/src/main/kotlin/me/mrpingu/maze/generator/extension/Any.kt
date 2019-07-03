@@ -1,15 +1,8 @@
 package me.mrpingu.maze.generator.extension
 
-import java.awt.Dimension
 import java.util.*
 
-typealias Matrix<T> = Array<Array<T>>
-
-typealias IntMatrix = Array<IntArray>
-
-typealias Coordinate = Pair<Int, Int>
-
-infix fun Int.by(y: Int) = Dimension(this, y)
+fun IntMatrix(width: Int, height: Int) = Array(height) { IntArray(width) }
 
 fun <T> stackOf() = Stack<T>()
 

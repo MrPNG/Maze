@@ -1,25 +1,49 @@
 package me.mrpingu.maze.generator
 
-import me.mrpingu.maze.generator.extension.Coordinate
+import me.mrpingu.maze.generator.ElementType.*
+import me.mrpingu.maze.generator.extension.Coordinates
 import me.mrpingu.maze.generator.extension.IntMatrix
+import kotlin.random.Random
 
 interface MazeGenerator {
 	
-	fun baseMatrix(width: Int, height: Int): IntMatrix
+	val random: Random
 	
-	fun cellCount(maze: IntMatrix): Int
+	fun createMatrix(width: Int, height: Int): IntMatrix
+	
+	fun cellCount(matrix: IntMatrix): Int
 	
 	fun generate(width: Int, height: Int): IntMatrix
 	
-	fun neighbours(maze: IntMatrix, cell: Coordinate): Array<Coordinate?>
+	fun elementType(coordinates: Coordinates): ElementType
 	
-	fun openCell(maze: IntMatrix, cell: Coordinate)
+	fun isCell(coordinates: Coordinates) = elementType(coordinates) == CELL
 	
-	fun openWall(maze: IntMatrix, wall: Coordinate)
+	fun isColumn(coordinates: Coordinates) = elementType(coordinates) == COLUMN
+	
+	fun isWall(coordinates: Coordinates) = elementType(coordinates) == WALL
+	
+	fun neighbourCells(matrix: IntMatrix, coordinates: Coordinates): Array<Pair<Int, Int>?>
+	
+	fun wallBetween(cell1: Coordinates, cell2: Coordinates): Coordinates
+	
+	fun closeCell(matrix: IntMatrix, cell: Coordinates)
+	
+	fun closeWall(matrix: IntMatrix, wall: Coordinates)
+	
+	fun openCell(matrix: IntMatrix, cell: Coordinates)
+	
+	fun openWall(matrix: IntMatrix, wall: Coordinates)
 	
 	fun validateDimensions(width: Int, height: Int): Boolean
 	
-	fun validateDimensions(maze: IntMatrix): Boolean
-	
-	fun wall(cell: Coordinate, otherCell: Coordinate): Coordinate
+	companion object {
+		
+		const val OPEN = 1
+		const val CLOSED = 0
+	}
 }
+
+interface MazeAlgorithm
+
+interface MazeShape
