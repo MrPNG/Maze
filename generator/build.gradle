@@ -1,0 +1,5 @@
+apply plugin: 'application'
+
+application {
+    mainClassName = 'me.mrpingu.maze.MainKt'
+}
